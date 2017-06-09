@@ -13,7 +13,7 @@ def network():
 
 
 x, y = network()
-y_ = tf.placeholder(tf.float32, [None, ])
+y_ = tf.placeholder(tf.float32, [None, 1])
 loss = tf.reduce_mean((y_ - y) ** 2)
 opt = tf.train.AdamOptimizer(learning_rate=0.001)
 train_op = opt.minimize(loss)
@@ -22,6 +22,6 @@ result = sess.run(y, feed_dict={x: [[1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1,
 print(result)
 for t in trange(10000):
     batch_x = np.array([np.random.randint(2, size=8) for _ in range(32)])
-    batch_y_ = np.array([1 if sum(batch_x[_]) == 8 else 0 for _ in range(32)])
-    loss, _ = sess.run([loss, train_op], feed_dict={x: batch_x, y_: batch_y_})
+    batch_y_ = np.array([[1] if sum(batch_x[_]) == 8 else [0] for _ in range(32)])
+    loss, to = sess.run([loss, train_op], feed_dict={x: batch_x, y_: batch_y_})
     print(loss)
